@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: healthtech-db
+    env_file: .env
+    environment:
+      # Eğer .env dosyasında bulamazsa default olarak 'postgres' kullanır
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${DB_NAME:-healthtech}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: always
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: healthtech-backend
+    env_file: .env
+    environment:
+      - DB_HOST=db
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: healthtech-frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    restart: always
+
+volumes:
+  pgdata:

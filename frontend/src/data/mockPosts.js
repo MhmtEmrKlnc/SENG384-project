@@ -1,0 +1,62 @@
+export const mockPosts = [
+  {
+    id: 1,
+    title: "AI-Powered Cardiology Imaging Analysis",
+    authorRole: "Engineer",
+    domain: "Cardiology Imaging",
+    expertiseRequired: "Radiologist / Cardiologist",
+    shortExplanation: "Developing an AI model to detect micro-anomalies in echocardiograms. Need clinical expertise to validate the model's findings against real patient cases.",
+    projectStage: "Prototype Developed",
+    levelOfCommitment: "Advisor",
+    confidentialityLevel: "Details discussed in meeting only",
+    status: "Active",
+    country: "Germany",
+    city: "Berlin",
+    createdAt: "2026-03-25T10:00:00Z"
+  },
+  {
+    id: 2,
+    title: "Wearable Device for Continuous Glucose Monitoring without Needles",
+    authorRole: "Healthcare Professional",
+    domain: "Endocrinology",
+    expertiseRequired: "Hardware Engineer / Bio-sensors",
+    shortExplanation: "I have a concept for a non-invasive continuous glucose monitor but lack the hardware engineering skills to build the sensor prototype.",
+    projectStage: "Idea/Concept",
+    levelOfCommitment: "Co-founder",
+    confidentialityLevel: "Public short pitch",
+    status: "Active",
+    country: "Netherlands",
+    city: "Amsterdam",
+    createdAt: "2026-03-27T14:30:00Z"
+  },
+  {
+    id: 3,
+    title: "Surgical Workflow Optimization Tool",
+    authorRole: "Healthcare Professional",
+    domain: "Surgery",
+    expertiseRequired: "Software Engineer / UX Designer",
+    shortExplanation: "Looking for a technical partner to develop a tablet application that standardizes prep workflows in the OR to reduce error rates.",
+    projectStage: "Concept Validation",
+    levelOfCommitment: "Research Partner",
+    confidentialityLevel: "Details discussed in meeting only",
+    status: "Active",
+    country: "Sweden",
+    city: "Stockholm",
+    createdAt: "2026-03-28T09:15:00Z"
+  },
+  {
+    id: 4,
+    title: "Automated Gait Analysis via Smartphone Video",
+    authorRole: "Engineer",
+    domain: "Orthopedics / Neurology",
+    expertiseRequired: "Neurologist / Physical Therapist",
+    shortExplanation: "Built a computer vision system that tracks gait anomalies from 60fps smartphone video. Need a clinician to help design the validation protocol.",
+    projectStage: "Pilot Testing",
+    levelOfCommitment: "Advisor",
+    confidentialityLevel: "Public short pitch",
+    status: "Active",
+    country: "UK",
+    city: "London",
+    createdAt: "2026-03-29T08:00:00Z"
+  }
+];

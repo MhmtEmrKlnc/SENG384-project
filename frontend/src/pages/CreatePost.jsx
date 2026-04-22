@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { usePosts } from '../context/PostContext';
 import { ShieldCheck, Info } from 'lucide-react';
@@ -7,6 +7,8 @@ import { ShieldCheck, Info } from 'lucide-react';
 const CreatePost = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { id } = useParams();
+  const isEditMode = Boolean(id);
 
   const isEngineer = user?.role === 'Engineer';
 
@@ -23,18 +25,39 @@ const CreatePost = () => {
     city: ''
   });
 
+  const { addPost, editPost, posts } = usePosts();
+
+  useEffect(() => {
+    if (isEditMode && posts.length > 0) {
+      const existing = posts.find(p => p.id === parseInt(id));
+      if (existing) {
+        setFormData({
+          title: existing.title || '',
+          domain: existing.domain || '',
+          expertiseRequired: existing.expertiseRequired || '',
+          shortExplanation: existing.shortExplanation || '',
+          highLevelIdea: existing.highLevelIdea || '',
+          projectStage: existing.projectStage || 'Idea/Concept',
+          levelOfCommitment: existing.levelOfCommitment || 'Advisor',
+          confidentialityLevel: existing.confidentialityLevel || 'Public short pitch',
+          country: existing.country || '',
+          city: existing.city || ''
+        });
+      }
+    }
+  }, [id, isEditMode, posts]);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const { addPost } = usePosts();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    addPost({
-      ...formData,
-      authorRole: user.role
-    });
+  const handleSave = (status) => {
+    const payload = { ...formData, authorRole: user.role, status };
+    if (isEditMode) {
+      editPost(id, payload);
+    } else {
+      addPost(payload);
+    }
     navigate('/dashboard');
   };
 
@@ -43,14 +66,14 @@ const CreatePost = () => {
   return (
     <div className="container" style={{ maxWidth: '800px', padding: '2rem 1rem' }}>
       <div style={{ marginBottom: '2rem' }}>
-        <h1 className="page-title">Create Announcement</h1>
+        <h1 className="page-title">{isEditMode ? 'Edit Announcement' : 'Create Announcement'}</h1>
         <p className="page-subtitle">
           Structure your co-creation request. {isEngineer ? 'Specify the clinical expertise you need.' : 'Specify the technical infrastructure you need.'}
         </p>
       </div>
 
       <div className="card">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={(e) => e.preventDefault()}>
           
           <div className="input-group">
             <label>Project Title</label>
@@ -134,7 +157,8 @@ const CreatePost = () => {
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
             <button type="button" onClick={() => navigate('/dashboard')} className="btn btn-outline">Cancel</button>
-            <button type="submit" className="btn btn-primary">Publish Announcement</button>
+            <button type="button" onClick={() => handleSave('Draft')} className="btn btn-outline" style={{borderColor: 'var(--color-accent)', color: 'var(--color-accent)'}}>Save as Draft</button>
+            <button type="button" onClick={() => handleSave('Active')} className="btn btn-primary">{isEditMode ? 'Update Announcement' : 'Publish Announcement'}</button>
           </div>
           
         </form>

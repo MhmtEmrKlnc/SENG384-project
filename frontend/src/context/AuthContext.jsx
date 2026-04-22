@@ -8,63 +8,89 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const [usersDb, setUsersDb] = useState([]);
-
   useEffect(() => {
     const storedUser = localStorage.getItem('healthtech_user');
-    if (storedUser) setUser(JSON.parse(storedUser));
-    
-    // existing users database
-    const savedUsers = localStorage.getItem('healthtech_db_users');
-    if (savedUsers) setUsersDb(JSON.parse(savedUsers));
-    
+    const storedToken = localStorage.getItem('healthtech_token');
+    if (storedUser && storedToken) {
+      setUser(JSON.parse(storedUser));
+    }
     setLoading(false);
   }, []);
 
   const login = async (email, password) => {
-    if (!email || !password) return { success: false, message: 'Please enter credentials.' };
-    
-    const foundUser = usersDb.find(u => u.email === email && u.password === password);
-    if (foundUser) {
-      const { password, ...safeUser } = foundUser;
-      setUser(safeUser);
-      localStorage.setItem('healthtech_user', JSON.stringify(safeUser));
-      return { success: true };
+    try {
+      const resp = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await resp.json();
+      if (resp.ok && data.success) {
+        setUser(data.user);
+        localStorage.setItem('healthtech_user', JSON.stringify(data.user));
+        localStorage.setItem('healthtech_token', data.token);
+        return { success: true };
+      }
+      return { success: false, message: data.message || 'Login failed' };
+    } catch(err) {
+      return { success: false, message: 'Server connection error.' };
     }
-    
-    return { success: false, message: 'Invalid email or password. Are you registered?' };
   };
 
   const register = async (email, password, role) => {
-    if (!email.endsWith('.edu')) {
-      return { success: false, message: 'Only institutional .edu emails are allowed.' };
-    }
-    if (usersDb.some(u => u.email === email)) {
-      return { success: false, message: 'Email already registered. Please login.' };
+    // Basic pre-validation on frontend
+    if (!email.includes('.edu') && !email.includes('.ac.')) {
+      return { success: false, message: 'Only institutional (.edu or .ac) emails are allowed.' };
     }
     
-    // email admin içeriyorsa admin yap -> V1 test için, sonradan degistirlecek
-    const finalRole = email.toLowerCase().includes('admin') ? 'Admin' : role;
-    
-    const newUser = { id: Date.now(), email, password, role: finalRole, name: email.split('@')[0] };
-    const updatedDb = [...usersDb, newUser];
-    
-    setUsersDb(updatedDb);
-    localStorage.setItem('healthtech_db_users', JSON.stringify(updatedDb));
-    
-    const { password: pwd, ...safeUser } = newUser;
-    setUser(safeUser);
-    localStorage.setItem('healthtech_user', JSON.stringify(safeUser));
-    return { success: true };
+    try {
+      const resp = await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, role })
+      });
+      const data = await resp.json();
+      if (resp.ok && data.success) {
+        return { success: true }; // Require login / verify separately
+      }
+      return { success: false, message: data.message || 'Registration failed' };
+    } catch(err) {
+      return { success: false, message: 'Server connection error.' };
+    }
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem('healthtech_user');
+    localStorage.removeItem('healthtech_token');
+  };
+
+  const updateProfile = async (profileData) => {
+    try {
+      const token = localStorage.getItem('healthtech_token');
+      const resp = await fetch('http://localhost:5000/api/auth/profile', {
+        method: 'PUT',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` 
+        },
+        body: JSON.stringify(profileData)
+      });
+      const data = await resp.json();
+      if (resp.ok && data.success) {
+        setUser(data.user);
+        localStorage.setItem('healthtech_user', JSON.stringify(data.user));
+        localStorage.setItem('healthtech_token', data.token);
+        return { success: true };
+      }
+      return { success: false, message: data.message || 'Profile update failed' };
+    } catch(err) {
+      return { success: false, message: 'Server connection error.' };
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, register, logout, updateProfile, loading }}>
       {!loading && children}
     </AuthContext.Provider>
   );

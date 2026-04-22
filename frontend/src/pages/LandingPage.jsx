@@ -28,8 +28,13 @@ const LandingPage = () => {
       else setError(res.message);
     } else {
       const res = await register(email, password, role);
-      if (res.success) navigate('/dashboard');
-      else setError(res.message);
+      if (res.success) {
+        alert('Registration successful! Please check the backend terminal logs for the Ethereal email verify link. Click it, then log in here.');
+        setIsLogin(true);
+        setPassword('');
+      } else {
+        setError(res.message);
+      }
     }
   };
 

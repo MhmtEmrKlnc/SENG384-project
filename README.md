@@ -44,6 +44,11 @@ docker-compose up -d --build
 - **Backend API:** `http://localhost:5000`
 - **Database:** `localhost:5432`
 
+> **Note on Email Verification:** When registering a new account, the backend uses *Ethereal Mail* to simulate sending confirmation links. To successfully activate a new account, you must check the backend console to click the verification link:
+> ```bash
+> docker-compose logs backend -f
+> ```
+
 **To stop the system:**
 ```bash
 docker-compose down

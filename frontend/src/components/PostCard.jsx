@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { MapPin, Clock, ShieldAlert, UserCheck, Stethoscope, Wrench } from 'lucide-react';
 import './PostCard.css';
 
-const PostCard = ({ post }) => {
+const PostCard = ({ post, children }) => {
   const { user } = useAuth();
   
   const date = new Date(post.createdAt).toLocaleDateString('en-US', {
@@ -62,6 +62,8 @@ const PostCard = ({ post }) => {
           View Details
         </Link>
       </div>
+      
+      {children}
     </div>
   );
 };

@@ -4,12 +4,14 @@ import { usePosts } from '../context/PostContext';
 import { User, MapPin, Calendar, Clock, Lock, FileText, CheckCircle2 } from 'lucide-react';
 import './PostDetails.css';
 
+import { useAuth } from '../context/AuthContext';
+
 const PostDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [post, setPost] = useState(null);
   const [showNDA, setShowNDA] = useState(false);
-  const [ndaAccepted, setNdaAccepted] = useState(false);
   const [requestSent, setRequestSent] = useState(false);
   const [proposedTimes, setProposedTimes] = useState("Let's discuss next week anytime between 2 PM - 5 PM CET.");
 
@@ -23,15 +25,35 @@ const PostDetails = () => {
 
   if (!post) return null;
 
-  const handleSendRequest = () => {
-    if (post.confidentialityLevel.includes('meeting') && !ndaAccepted) {
-      alert("Please accept the Non-Disclosure Agreement before requesting a meeting.");
-      return;
+  const handleSendRequest = async () => {
+    try {
+      const token = localStorage.getItem('healthtech_token');
+      const resp = await fetch('http://localhost:5000/api/meetings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          post_id: post.id,
+          owner_id: post.user_id,
+          message: proposedTimes
+        })
+      });
+
+      if (resp.ok) {
+        setRequestSent(true);
+        setShowNDA(false);
+      } else {
+        alert("Failed to send meeting request. Are you logged in?");
+      }
+    } catch(err) {
+      console.error(err);
+      alert("Network error.");
     }
-    // Simulate API Call
-    setRequestSent(true);
-    setShowNDA(false);
   };
+
+  const isOwner = user && user.id === post.user_id;
 
   return (
     <div className="container post-details-container">
@@ -89,53 +111,41 @@ const PostDetails = () => {
           </div>
 
           {/* Sidebar Action */}
-          <div className="post-sidebar">
-            <div className="card action-card">
-              <h3>Interested in Co-Creating?</h3>
-              <p className="text-muted" style={{fontSize: '0.9rem', marginBottom: '1.5rem'}}>
-                Initiate first contact to explore synergy and schedule an external meeting via Zoom/Teams.
-              </p>
+          {!isOwner && (
+            <div className="post-sidebar">
+              <div className="card action-card">
+                <h3>Interested in Co-Creating?</h3>
+                <p className="text-muted" style={{fontSize: '0.9rem', marginBottom: '1.5rem'}}>
+                  Express your interest with a short message. The partner will review and suggest meeting times.
+                </p>
 
-              {!showNDA ? (
-                <button onClick={() => setShowNDA(true)} className="btn btn-primary btn-full">
-                  Request Meeting
-                </button>
-              ) : (
-                <div className="meeting-form">
-                  <h4>Propose Meeting Times</h4>
-                  <textarea 
-                    className="input-base" 
-                    rows={3} 
-                    value={proposedTimes}
-                    onChange={(e) => setProposedTimes(e.target.value)}
-                    style={{marginBottom: '1rem'}}
-                  />
-                  
-                  {post.confidentialityLevel.includes('meeting') && (
-                    <div className="nda-box">
-                      <div className="nda-header">
-                        <FileText size={16} /> <strong>Standard Platform NDA</strong>
-                      </div>
-                      <p className="nda-text">
-                        I agree to keep all technical and clinical information shared during the initial meeting confidential. I will not use this information for personal gain or disclose it to third parties without written consent.
-                      </p>
-                      <label className="checkbox-label">
-                        <input type="checkbox" checked={ndaAccepted} onChange={(e) => setNdaAccepted(e.target.checked)} />
-                        I accept the Non-Disclosure Agreement.
-                      </label>
+                {!showNDA ? (
+                  <button onClick={() => setShowNDA(true)} className="btn btn-primary btn-full">
+                    Express Interest
+                  </button>
+                ) : (
+                  <div className="meeting-form">
+                    <h4>Short Message</h4>
+                    <textarea 
+                      className="input-base" 
+                      rows={4} 
+                      value={proposedTimes}
+                      onChange={(e) => setProposedTimes(e.target.value)}
+                      placeholder="Hi, I am very interested in your project because..."
+                      style={{marginBottom: '1rem'}}
+                    />
+
+                    <div className="action-buttons">
+                      <button onClick={() => setShowNDA(false)} className="btn btn-outline">Cancel</button>
+                      <button onClick={handleSendRequest} className="btn btn-primary" disabled={proposedTimes.trim() === ''}>
+                        Send Message
+                      </button>
                     </div>
-                  )}
-
-                  <div className="action-buttons">
-                    <button onClick={() => setShowNDA(false)} className="btn btn-outline">Cancel</button>
-                    <button onClick={handleSendRequest} className="btn btn-primary" disabled={post.confidentialityLevel.includes('meeting') && !ndaAccepted}>
-                      Send Request
-                    </button>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
     </div>

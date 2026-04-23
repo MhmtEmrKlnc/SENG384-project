@@ -60,21 +60,49 @@ docker-compose logs -f
 ```
 
 ### Screenshots of Project V1 (Not Completed Yet)
-Main Screen and Login/Register
-<img width="1415" height="922" alt="3" src="https://github.com/user-attachments/assets/35085d50-5aa2-4699-892f-2a2e57543b53" />
-<img width="1277" height="924" alt="4" src="https://github.com/user-attachments/assets/ee4cce3e-d315-492a-81bf-28cf9117df2e" />
+Register Page
+<img width="1225" height="866" alt="register" src="https://github.com/user-attachments/assets/92abef13-c256-4510-84c9-64f40663d9be" />
 
-Innovation Board
-<img width="1311" height="954" alt="5" src="https://github.com/user-attachments/assets/a36a8126-255e-4ec8-9f5b-e197eae4c711" />
+Login Page
+<img width="1200" height="861" alt="login" src="https://github.com/user-attachments/assets/4e44e583-8888-4534-85e1-8d78d112a1fb" />
 
-Post Detail and Send Meeting
-<img width="1250" height="891" alt="6" src="https://github.com/user-attachments/assets/06e57f4c-f807-456e-9e4e-719173071f09" />
- 
-Create Announcement
-<img width="1249" height="956" alt="7" src="https://github.com/user-attachments/assets/8df6b0ff-71c9-4d4e-92c0-3cf774d1a402" />
+Dashboard Page
+<img width="1209" height="914" alt="innovationboard" src="https://github.com/user-attachments/assets/a48dd8e6-be45-4a81-adc4-76459c8069c9" />
 
-Admin Screens
-<img width="1405" height="798" alt="1" src="https://github.com/user-attachments/assets/72fd6480-a97c-4e9f-af79-0baab974db10" />
+Dashboard Page - My Posts
+<img width="1122" height="848" alt="myposts" src="https://github.com/user-attachments/assets/7e6c33b4-b330-44a4-8590-190e8006acdf" />
+
+Express Interest Page
+<img width="1192" height="697" alt="expressinteres" src="https://github.com/user-attachments/assets/1d0661bc-16d5-40dc-8956-18b519baccc6" />
+
+Send Message
+<img width="1192" height="697" alt="expressinteres" src="https://github.com/user-attachments/assets/8c1411df-0ff6-4992-9f98-112b3e600b0c" />
+
+Message Sent Popup Message
+<img width="1170" height="537" alt="messagesent" src="https://github.com/user-attachments/assets/3d83bac3-7961-4deb-8d50-9167326ae226" />
+
+Create Announcement Page
+<img width="770" height="846" alt="createannouncement" src="https://github.com/user-attachments/assets/35476252-a8ac-4ca4-9ab3-9dcc7287f4be" />
+
+Profile Setting Page
+<img width="489" height="690" alt="profile" src="https://github.com/user-attachments/assets/a6b0064e-cb28-4ba1-a133-cf2ee865e4d0" />
+
+Requests Page
+<img width="489" height="690" alt="profile" src="https://github.com/user-attachments/assets/5bd325e1-5cf6-423d-9db3-7e0dca0fb889" />
+
+Requests Page (Different Situations)
+<img width="489" height="690" alt="profile" src="https://github.com/user-attachments/assets/dd9c4173-8815-4d3c-a38d-9422d7244fd9" />
+
+Admin Page - Manage Posts
+<img width="1145" height="849" alt="adminmanageposts" src="https://github.com/user-attachments/assets/89dbe9c2-adb3-4a92-81fc-ba3fec2f075c" />
+
+Admin Page - Manage Users
+<img width="1138" height="879" alt="adminmanageusers" src="https://github.com/user-attachments/assets/b7132fbe-2c29-43c3-9026-ca90826a334d" />
+
+Admin Page - Statistics and Logs
+<img width="1124" height="862" alt="adminstatistics" src="https://github.com/user-attachments/assets/2b4b0c80-e401-4467-9a3f-5d2557939ef9" />
+
+
 
 
 
